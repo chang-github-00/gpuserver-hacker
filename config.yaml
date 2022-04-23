@@ -1,0 +1,43 @@
+description: Simple PyTorch job on MNIST on AMLK8s
+
+target:
+  service: amlk8s
+  # run "amlt target list amlk8s" to list the names of available AMLK8s targets
+  name: itplabrr1cl1 # 32G
+#  name: itpscusv100cl #16G
+  vc: resrchvc
+
+environment:
+#  image: pytorch/pytorch:1.4-cuda10.1-cudnn7-devel
+  image: indexserveregistry.azurecr.io/deepscale:1.0.post0
+#  image: shumingdocker.azurecr.io
+  registry: docker.io # any public registry can be specified here
+  setup:
+    - pip install tensorboard --user
+
+code:
+  # local directory of the code. this will be uploaded to the server.
+  # $CONFIG_DIR is expanded to the directory of this config file
+  local_dir: $CONFIG_DIR/src
+
+data:
+#  # You need to run "python src/download_data.py" beforehand
+#  # to generate the dataset to be uploaded
+#  # don't forget to run with --upload-data
+  local_dir: $CONFIG_DIR/data/
+#
+#  # The data will be uploaded to your default storage.
+#  #   Check ``multi_storage.yaml'' for more flexibility.
+  remote_dir: data/applyGPU/
+
+
+# data:
+#   data upload is not required for this example
+
+# list of jobs to run, we run 2 jobs in this example
+jobs:
+- name: job1
+  sku: G8
+  command:
+   - sleep infinity
+#  - python train.py --gpu_devices 4 5 6 7
